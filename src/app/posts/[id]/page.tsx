@@ -2,13 +2,12 @@ import { getPost } from "@/actions/get-post";
 import { PostDetails } from "./_components/post-details";
 
 interface IPostPage {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>
 }
 
 export default async function PostPage({ params }: IPostPage) {
-  const { post } = await getPost(params.id);
+  const { id } = await params;
+  const { post } = await getPost(id);
 
   if (!post) {
     return;
