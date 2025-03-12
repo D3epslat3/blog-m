@@ -60,8 +60,7 @@ export default function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               className={clsx(
-                'absolute top-16 left-0 w-full md:hidden p-4',
-                darkMode ? 'bg-slate-800' : 'bg-white'
+                'absolute top-16 left-0 w-full md:hidden p-4'
               )}
             >
               <div className="flex flex-col space-y-4">
