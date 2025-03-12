@@ -1,59 +1,47 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { CreatePostSchema, createPostSchema } from '@/types/schemas/create-post-schema'
+import {createPost} from "@/actions/create-post"
+import {clsx} from "clsx"
 
-export default function CreatePostPage() {
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
-  const router = useRouter()
+export default function NewPostPage() {
+  const { register, handleSubmit } = useForm<CreatePostSchema>({
+    resolver: zodResolver(createPostSchema)
+  })
 
-  const handleSubmit = async () => {
-    const response = await fetch('/api/posts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ title, content }),
-    })
-
-    if (response.ok) {
-      const post = await response.json()
-      router.push(`/posts/${post.id}`)
-    }
+  async function handleCreatePost(data: CreatePostSchema) {
+    await createPost(data)
   }
 
   return (
-    <div className="min-h-screen bg-slate-800 text-gray-100 p-8">
-      <div className="max-w-3xl mx-auto mt-10">
-        <h1 className="text-4xl font-bold mb-8">Criar Novo Post</h1>
-
-        <form onSubmit={(e) => { e.preventDefault(); handleSubmit() }}>
-          <div className="mb-4">
-            <label className="block text-sm mb-2">Título</label>
+    <div className={clsx('min-h-screen p-8')}>
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-2xl font-bold mb-8">Criar Novo Post</h1>
+        <form onSubmit={handleSubmit(handleCreatePost)} className="space-y-6">
+          <div>
+            <label>Título</label>
             <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full p-2 bg-slate-700 rounded-lg"
+              type='text'
+              minLength={5}
+              className="w-full p-2 rounded-lg border"
               required
+              {...register('title')}
             />
           </div>
-
-          <div className="mb-4">
-            <label className="block text-sm mb-2">Conteúdo</label>
+          <div>
+            <label>Conteúdo</label>
             <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="w-full p-2 bg-slate-700 rounded-lg"
-              rows={10}
+              minLength={20}
+              className="w-full p-2 rounded-lg border h-64"
               required
+              {...register('content')}
             />
           </div>
-
           <button
             type="submit"
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+            className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
           >
             Publicar
           </button>
