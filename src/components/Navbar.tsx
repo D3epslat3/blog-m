@@ -2,9 +2,8 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, PenSquare, Settings, Sun, Moon } from 'lucide-react'
+import { Menu, X} from 'lucide-react'
 import Link from 'next/link'
-import { useThemeStore } from '@/stores/themeStore'
 import clsx from 'clsx'
 
 export default function Navbar() {
